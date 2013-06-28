@@ -1,0 +1,19 @@
+Source: jmxtrans
+Section: java
+Priority: optional
+Maintainer: Nik Everett <neverett@wikimedia.com>
+Homepage: https://github.com/jmxtrans/jmxtrans
+Standards-Version: 3.9.3
+Build-Depends: ant, ant-optional, debhelper (>= 9), default-jdk
+Vcs-Git: https://git.wikimedia.org/git/operations/debs/jmxtrans.git
+Vcs-Browser: https://git.wikimedia.org/tree/operations%2Fdebs%2Fjmxtrans
+
+Package: jmxtrans
+Architecture: all
+Depends: ${misc:Depends}, default-jdk | openjdk-6-jdk | openjdk-7-jdk, adduser
+Recommends: python-yaml
+Description: connector between JMX and logging/monitoring/graphing packages
+ jmxtrans is a very powerful tool which uses easily generated JSON based
+ configuration files and then outputs the data in whatever format you desire.
+ It does this with a very efficient engine design that will scale to
+ communicating with thousands of machines from a single jmxtrans instance.

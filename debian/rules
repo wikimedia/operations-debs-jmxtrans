@@ -1,0 +1,20 @@
+#!/usr/bin/make -f
+export DH_VERBOSE=1
+
+VERSION:=242-1
+ANT:=ant -Dversion=$(VERSION) -Dbuild.version=$(VERSION)
+
+override_dh_auto_clean:
+	$(ANT) clean
+
+override_dh_auto_build:
+	$(ANT) jar
+
+override_dh_auto_test:
+	true	#there aren't any tests to run any way
+
+override_dh_auto_install:
+	$(ANT) debian
+
+%:
+	dh $@

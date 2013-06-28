@@ -1,0 +1,5 @@
+jmxtrans (242-1) unstable; urgency=low
+
+  * Rework build so that debian packages can be build with git-buildpackage.
+
+ -- Nik Everett <neverett@wikimedia.com>  Thu, 26 Jun 2013 16:19:00 -0400

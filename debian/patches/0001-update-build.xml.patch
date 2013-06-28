@@ -1,0 +1,91 @@
+From: Nik Everett <neverett@wikimedia.com>
+Date: Mon, 1 Jul 2013 19:20:16 +0200
+Subject: update build.xml
+
+Change-Id: I94e2b44c6d279910bde3e61fcb61b454e55960c3
+---
+ build.xml |   47 ++++++++++++++++++++++++-----------------------
+ 1 file changed, 24 insertions(+), 23 deletions(-)
+
+diff --git a/build.xml b/build.xml
+index c491137..ae7f36b 100644
+--- a/build.xml
++++ b/build.xml
+@@ -91,6 +91,7 @@
+ 
+ 	<target name="clean">
+ 		<delete dir="${build.dir}" />
++		<delete dir="debian/jmxtrans" />
+ 	</target>
+ 
+ 	<target name="classes" depends="init">
+@@ -170,7 +171,7 @@
+ 		</sync>
+ 	</target>
+ 
+-	<target name="dist" depends="clean, jar, jar-all, javadoc">
++	<target name="dist" depends="jar, jar-all, javadoc">
+ 		<copy todir="${build.dist.dir}">
+ 			<fileset dir="${build.dir}">
+ 				<include name="javadoc/**" />
+@@ -233,38 +234,38 @@
+ 	</target>
+ 
+ 	<target name="debian" depends="dist">
+-		<filter token="PACKAGE" value="jmxtrans" />
+-		<filter token="NOW" value="${NOW}" />
+-		<filter token="PROPER_NOW" value="${PROPER_NOW}" />
+-		<filter token="YEAR" value="${YEAR}" />
+-		<filter token="VERSION" value="${version}" />
+-                <filter token="FULL_VERSION" value="${sVersion}" />
+-
+-		<copy todir="${target.dir}/jmxtrans/debian" filtering="true">
+-			<fileset dir="debian">
+-				<include name="**"/>
+-			</fileset>
+-		</copy>
+-		<unzip src="${build.dist.zip}" dest="${target.dir}/jmxtrans/debian/tmp/usr/share" />
+-		<move todir="${target.dir}/jmxtrans/debian/tmp/usr/share/jmxtrans">
+-			<fileset dir="${target.dir}/jmxtrans/debian/tmp/usr/share/jmxtrans-${version}">
++		<property name="install.root" value="debian/jmxtrans" />
++		<unzip src="${build.dist.zip}" dest="${install.root}/usr/share" />
++		<move todir="${install.root}/usr/share/jmxtrans">
++			<fileset dir="${install.root}/usr/share/jmxtrans-${version}">
+ 				<include name="**"/>
+ 			</fileset>
+ 		</move>
+ 
+         <!-- inject docs directory -->
+-		<copy todir="${target.dir}/jmxtrans/debian/tmp/usr/share/doc/jmxtrans">
++		<copy todir="${install.root}/usr/share/doc/jmxtrans">
+ 			<fileset dir="${basedir}/doc">
+ 				<include name="**"/>
+ 			</fileset>
+ 		</copy>
++		<mkdir dir="${install.root}/var/log/jmxtrans" />
++		<symlink link="${install.root}/usr/share/jmxtrans/log" resource="/var/log/jmxtrans"/>
++		<mkdir dir="${install.root}/etc/jmxtrans" />
+ 
+-		<copy file="bin/yaml2jmxtrans" todir="${target.dir}/jmxtrans/debian/tmp/bin" />
+-		<chmod file="${target.dir}/jmxtrans/debian/rules" perm="ugo+rx"/>
+-
+-		<exec executable="/usr/bin/debuild" dir="${target.dir}/jmxtrans" failonerror="true">
+-			<arg line="-b -i -us -uc"/>
+-		</exec>
++		<copy file="bin/yaml2jmxtrans" todir="${install.root}/usr/share/bin" />
++		<chmod perm="ugo+rx">
++			<fileset dir="${install.root}/usr/share/bin">
++				<include name="*.sh" />
++				<include name="*.py" />
++				<include name="yaml2jmxtrans" />
++			</fileset>
++			<fileset dir="${install.root}/usr/share/jmxtrans">
++				<include name="*.sh" />
++			</fileset>
++			<fileset dir="${install.root}/usr/share/jmxtrans/tools">
++				<include name="*.sh" />
++			</fileset>
++		</chmod>
+ 	</target>
+ 
+ 	<target name="rpm" depends="dist">

@@ -1,0 +1,69 @@
+#!/bin/bash
+
+### BEGIN INIT INFO
+# Provides:     jmxtrans
+# Required-Start:  $time $network $remote_fs $syslog
+# Required-Stop:   $time $network $remote_fs $syslog
+# Default-Start:    2 3 4 5
+# Default-Stop:     0 1 6
+# Short-Description:    jmxtrans
+### END INIT INFO
+
+. /lib/lsb/init-functions
+
+if [ -f /etc/default/jmxtrans ]; then
+    source /etc/default/jmxtrans
+fi
+
+PIDFILE="/var/run/jmxtrans.pid"
+
+RUNCMD="if [ -f /etc/default/jmxtrans ]; then source /etc/default/jmxtrans ; fi ; \
+          cd /usr/share/jmxtrans ; \
+          source jmxtrans.sh"
+
+
+do_start() {
+    start-stop-daemon --start -b --pidfile $PIDFILE --oknodo \
+        --chuid jmxtrans:jmxtrans -u jmxtrans -g jmxtrans -v \
+        --exec /bin/bash -- -c "$RUNCMD start"
+}
+
+do_stop() {
+    su jmxtrans -s /bin/bash -c "$RUNCMD stop"
+}
+
+do_status() {
+    su jmxtrans -s /bin/bash -c "$RUNCMD status" > /dev/null
+}
+
+case "$1" in
+  start)
+    log_daemon_msg "Starting jmxtrans" "jmxtrans"
+    do_start
+    log_end_msg 0
+    ;;
+  stop)
+    log_daemon_msg "Stopping jmxtrans" "jmxtrans"
+    do_stop
+    log_end_msg 0
+    ;;
+
+  restart|reload|force-reload|try-restart)
+    log_daemon_msg "Restarting jmxtrans" "jmxtrans"
+    do_stop
+    do_start
+    log_end_msg 0
+    ;;
+
+  status)
+    do_status
+    case "$?" in
+      0) log_success_msg "jmxtrans is running"; exit 0 ;;
+      *) log_failure_msg "jmxtrans is not running"; exit 3 ;;
+    esac
+    ;;
+
+  *)
+    log_action_msg "Usage: /etc/init.d/jmxtrans {start|stop|reload|force-reload|restart|try-restart|status}"
+    exit 1
+esac
