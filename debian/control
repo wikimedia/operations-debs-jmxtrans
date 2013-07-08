@@ -10,7 +10,7 @@ Vcs-Browser: https://git.wikimedia.org/tree/operations%2Fdebs%2Fjmxtrans
 
 Package: jmxtrans
 Architecture: all
-Depends: ${misc:Depends}, default-jdk | openjdk-6-jdk | openjdk-7-jdk, adduser
+Depends: ${misc:Depends}, adduser, default-jdk | openjdk-6-jdk | openjdk-7-jdk
 Recommends: python-yaml
 Description: connector between JMX and logging/monitoring/graphing packages
  jmxtrans is a very powerful tool which uses easily generated JSON based
