@@ -1,52 +1,20 @@
 #!/usr/bin/make -f
-# Uncomment this to turn on verbose mode.
 export DH_VERBOSE=1
 
+VERSION:=242-1
+ANT:=ant -Dversion=$(VERSION) -Dbuild.version=$(VERSION)
 
-clean:
-	dh_testdir
-	dh_testroot
-#	dh_clean
+override_dh_auto_clean:
+	$(ANT) clean
 
-setup-perms:
-	chmod -f ugo+x debian/tmp/usr/share/@PACKAGE@/*.sh || true
-	chmod -f ugo+x debian/tmp/usr/share/@PACKAGE@/tools/*.py || true
+override_dh_auto_build:
+	$(ANT) jar
 
-binary: binary-indep
-binary-indep: setup-perms 
-#	dh_prep
-	dh_testdir
-	dh_testroot
-	dh_installdirs
-	dh_install
-	dh_installchangelogs
-	dh_installdocs
-#	dh_installexamples
-#	dh_installmenu
-	dh_installdebconf
-#	dh_installlogrotate
-#	dh_installemacsen
-#	dh_installpam
-#	dh_installmime
-#	dh_python
-	dh_installinit
-#	dh_installcron
-#	dh_installinfo
-#	dh_installman
-	dh_lintian
-#	dh_link
-#	dh_strip
-	dh_compress
-	dh_fixperms
-#	dh_perl
-#	dh_makeshlibs
-	dh_installdeb
-#	dh_shlibdeps
-	dh_gencontrol
-	dh_md5sums
-	dh_builddeb
+override_dh_auto_test:
+	true	#there aren't any tests to run any way
+
+override_dh_auto_install:
+	$(ANT) debian
 
 %:
-	dh	$@
-
-.PHONY: clean binary binary-indep setup-perms
+	dh $@

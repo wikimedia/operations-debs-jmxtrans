@@ -1,5 +1,5 @@
-@PACKAGE@ (@VERSION@-1) stable; urgency=low
+jmxtrans (242-1) unstable; urgency=low
 
-  * See http://jmxtrans.googlecode.com/ for more details.
+  * Rework build so that debian packages can be build with git-buildpackage.
 
- -- Jon Stevens <latchkey@gmail.com>  @PROPER_NOW@
+ -- Nik Everett <neverett@wikimedia.com>  Thu, 26 Jun 2013 16:19:00 -0400

@@ -1,0 +1,8 @@
+LOG_DIR="/var/log/jmxtrans"
+SECONDS_BETWEEN_RUNS=60
+JSON_DIR="/etc/jmxtrans"
+HEAP_SIZE=512
+NEW_SIZE=64
+CPU_CORES=$(grep -c ^processor /proc/cpuinfo)
+NEW_RATIO=8
+LOG_LEVEL=debug
